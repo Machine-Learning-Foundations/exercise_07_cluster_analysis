@@ -26,7 +26,7 @@ def scatter_clusters_2d(
         group = data[labels == lbl, :]
         center = np.mean(group, axis=0)
         ax.scatter(group[:, 0], group[:, 1])
-        ax.scatter(*center, c="red", marker="x", s=300)
+        ax.scatter(center[0], center[1], c="red", marker="x", s=300)
 
 
 def plot_kmeans_clustering(
