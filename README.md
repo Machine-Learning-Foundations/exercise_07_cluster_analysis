@@ -26,8 +26,11 @@ Navigate to `src/ex1_kmeans.py`. Implement the first part of the `plot_kmeans_cl
 2. k-means clustering is scale sensitive. This means that we generally need to rescale our input data before performing clustering. Note that our `plot_kmeans_clustering` function has a `standardize` parameter that is set to `False` by default. Standardize the data according to $x_i = \frac{x_i - \mu}{\sigma}$ where $\mu$ is the sample mean, $\sigma$ is the sample standard deviation, in case that `standardize` is set to `True`. `sklearn.preprocessing` may be helpful.
 
 Now we want to perform k-means clustering. Implement the `perform_kmeans_clustering` function following these steps:
+
 3. Use `sklearn.cluster.KMeans` to train on the given data. Set the parameter `init`, which controls the initialization of the cluster centers, to `random`. There is a better way to set this value, but we will discuss that in Task 3. 
+
 4. Retrieve the cluster centers and predict the cluster index for each point. 
+
 5. Return the inertia as a float, the cluster centers and the predicted cluster indices as an array each. 
 
 Go back to the `plot_kmeans_clustering` function and finish the remaining TODOs:
@@ -66,8 +69,11 @@ In this task the goal is to reduce the storage requirement of an image with widt
 1. Open the file `src/ex2_image_compression.py`. The image is loaded in the `main` function using the `load_image` function. Inspect the `input_img` variable and print the information about its dimensions.
 
 Implement the `compress_colorspace` function using the k-means algorithm: 
+
 2. Reshape the input image into $(w\cdot h, 3)$ to perform clustering on colors.
+
 3. Use `MiniBatchKMeans` to cluster the image into $k$ clusters.
+
 4. Return a compressed image where the number of unique colors where reduced from $256^3$ to $k$ via k-means clustering. The compressed image must have the same shape as the original one.
 
 5. Use `compress_colorspace` in your `main` function to compress the image for $k \in \{2,8,64,256\}$ and plot the result using imshow. Set the corresponding value of $k$ as title for each result. 
