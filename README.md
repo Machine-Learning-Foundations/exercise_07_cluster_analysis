@@ -98,4 +98,4 @@ Navigate into `src/ex3_kmeans_plus_plus.py` and have a look at the code.
 
 ### Task 4 (Optional): Comparison between k-Means and Gaussian Mixture Models
 
-Navigate into `src/ex4_gmm.py` and have a look at the code. We are creating synthetic dataset with three classes (the same that we used in the lecture) an want to compare k-means clustering and GMMs. If you want, you can take the diabetes dataset from Day 04. Implement the TODOs in the file.
+Navigate into `src/ex4_gmm.py` and have a look at the code. We are creating synthetic dataset with three classes (the same that we used in the lecture) an want to compare k-means clustering and GMMs. Implement the TODOs in the file.
