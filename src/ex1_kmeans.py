@@ -142,5 +142,5 @@ if __name__ == "__main__":
     plt.show()
 
     fig = plot_decision_boundary("./data/synthetic/streched_distribution.npy", k=k)
-    fig.savefig("../figures/kmeans_voronoi.png")
+    fig.savefig("./figures/kmeans_voronoi.png")
     plt.show()
