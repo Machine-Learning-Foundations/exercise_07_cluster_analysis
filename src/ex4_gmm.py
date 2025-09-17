@@ -1,3 +1,5 @@
+"""(Optional) Compare k-means and GMMs for clustering."""
+
 import matplotlib.pyplot as plt
 from numpy import where
 from sklearn.datasets import make_classification
