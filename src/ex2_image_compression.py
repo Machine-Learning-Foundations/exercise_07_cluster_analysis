@@ -14,10 +14,11 @@ def load_image(data_path: str) -> np.ndarray:
         data_path (str): Path to data file.
 
     Returns:
-        np.ndarray: Array of image data of shape (hight, width, number of color channels).
+        np.ndarray: Array of image data of shape (height, width, number of color channels)
+            with values in [0, 1].
     """
     img = imageio.imread(os.path.join(data_path, "saint_sulpice.jpg"))
-    return np.asarray(img.astype(np.float32)) / 256.0
+    return np.asarray(img, dtype=np.float32) / 255.0
 
 
 def compress_colorspace(img: np.ndarray, k: int) -> np.ndarray:
@@ -26,10 +27,10 @@ def compress_colorspace(img: np.ndarray, k: int) -> np.ndarray:
     Args:
         img (np.ndarray): Numpy array of image data of shape
             (height, width, number of color channels).
-        k (int): Number of clusters. Must be smaller than (height * weight) + 1 of img.
+        k (int): Number of clusters. Must not exceed height * width of img.
 
     Returns:
-        np.ndarray: Compressed image array of the shape img.shape.
+        np.ndarray: Compressed image array of the shape img.shape with at most k unique colors.
     """
     # 2. reshape input image into (width*height, 3) to perform clustering on colors
     # TODO

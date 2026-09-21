@@ -1,5 +1,5 @@
 """Perform k-Means on synthetic blobs of data."""
-from typing import Tuple
+from typing import Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -60,6 +60,8 @@ def plot_kmeans_clustering(
     # use `axs` above to define which subplot to use and
     # set inertia as title; then use `scatter_clusters_2d`
     # to plot all input data on the axes
+    # Note: we plot the *original* (unscaled) data, so that the
+    # effect of standardization is visible in the same coordinate system.
     # TODO
 
     # 7. return figure object
@@ -70,6 +72,7 @@ def plot_kmeans_clustering(
 def perform_kmeans_clustering(
     data: np.ndarray,
     k: int = 10,
+    random_state: Optional[int] = None,
 ) -> Tuple[float, np.ndarray, np.ndarray]:
     """Perform k-means clustering algorithm on data points.
 
@@ -78,6 +81,7 @@ def perform_kmeans_clustering(
     Args:
         data (np.ndarray): Array of x and y coordinates of data points.
         k (int): Number of clusters for k-means.
+        random_state (Optional[int]): Seed for the initialization. Default: None.
 
     Returns:
         tuple[float, np.ndarray, np.ndarray]: Tuple containing the interia of k-means, an array
@@ -98,7 +102,7 @@ def plot_decision_boundary(data_file: str, k: int = 10) -> Figure:
 
     Args:
         data_file (str): Path of the data file.
-        k (int): The number of clusters.
+        k (int): The number of clusters. Must be at least 3 for a Voronoi diagram.
 
     Returns:
         Figure: Matplotlib figure of voronoi plot.
@@ -122,7 +126,7 @@ def plot_decision_boundary(data_file: str, k: int = 10) -> Figure:
 
 if __name__ == "__main__":
     """Perform k-means on different datasets and save as pngs."""
-    # set different values for k to see the changes
+    # TODO: set different values for k to see the changes
     k = 20
     fig = plot_kmeans_clustering(
         "./data/synthetic/streched_distribution.npy",

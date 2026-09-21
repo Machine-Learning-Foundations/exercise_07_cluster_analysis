@@ -12,9 +12,9 @@ def uniform_sampling(data: np.ndarray, k: int) -> np.ndarray:
         k (int): Number of k-means clusters.
 
     Returns:
-        np.ndarray: Uniformly sampled data.
+        np.ndarray: Uniformly sampled data. 
     """
-    # 1. draw points uniformly from dataset
+    # 1. draw points uniformly from dataset (without replacement)
     # TODO
     indices = 0
     return data[indices]
@@ -25,13 +25,14 @@ def d2_sampling(data: np.ndarray, k: int) -> np.ndarray:
 
     Args:
         data (np.ndarray): Array of x and y-coordinates of data points.
-        k (int): Number of k-means clusters.
+        k (int): Number of k-means clusters. Must not exceed the number of
+            distinct data points.
 
     Returns:
-        np.ndarray: D2 sampled data.
+        np.ndarray: D2 sampled data of shape (k, number of features).
     """
     # 2. follow pseudocode of d^2 algorithm and implement it
-    centers = np.empty([k, 2])
+    centers = np.empty([k, data.shape[1]])
     s_ind = np.random.randint(0, len(data))
     centers[0] = data[s_ind]
     # TODO

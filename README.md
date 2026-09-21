@@ -23,24 +23,22 @@ Fortunately, the implementation of k-means in `sklearn` takes care of all these 
 Navigate to `src/ex1_kmeans.py`. Implement the first part of the `plot_kmeans_clustering` function as follows:
 
 1. Load the input data from the given path. You can now run the file and examine the data.
-2. k-means clustering is scale sensitive. This means that we generally need to rescale our input data before performing clustering. Note that our `plot_kmeans_clustering` function has a `standardize` parameter that is set to `False` by default. Standardize the data according to $x_i = \frac{x_i - \mu}{\sigma}$ where $\mu$ is the sample mean, $\sigma$ is the sample standard deviation, in case that `standardize` is set to `True`. `sklearn.preprocessing` may be helpful.
+2. k-means clustering is scale sensitive. This means that we generally need to rescale our input data before performing clustering. Note that our `plot_kmeans_clustering` function has a `standardize` parameter that is set to `False` by default. Standardize each feature according to $x_i = \frac{x_i - \mu}{\sigma}$ where $\mu$ is the mean and $\sigma$ the standard deviation of the feature, in case that `standardize` is set to `True`. `sklearn.preprocessing` may be helpful (note that `sklearn.preprocessing.scale` uses the population standard deviation, i.e. `ddof=0`).
 
 Now we want to perform k-means clustering. Implement the `perform_kmeans_clustering` function following these steps:
 
-3. Use `sklearn.cluster.KMeans` to train on the given data. Set the parameter `init`, which controls the initialization of the cluster centers, to `random`. There is a better way to set this value, but we will discuss that in Task 3. 
+3. Use `sklearn.cluster.KMeans` to train on the given data. Set the parameter `init`, which controls the initialization of the cluster centers, to `random`. There is a better way to set this value, but we will discuss that in Task 3. Set `n_init=10` (the number of restarts with different initializations) and pass the `random_state` argument of `perform_kmeans_clustering` on to `KMeans`, so that results are reproducible.
 
 4. Retrieve the cluster centers and predict the cluster index for each point. 
 
-5. Return the inertia as a float, the cluster centers and the predicted cluster indices as an array each. 
+5. Return the inertia as a Python `float`, the cluster centers and the predicted cluster indices as an array each. 
 
 Go back to the `plot_kmeans_clustering` function and finish the remaining TODOs:
 
-6. Call the `perform_kmeans_clustering` function three times. Visualize the data points, cluster centers and the assignment of data points to cluster centers in a single scatter plot. To do this, use a for-loop and `scatter_clusters_2d` to plot all the results in one plot (have a closer look at matplotlib subplots and axes).
+6. Call the `perform_kmeans_clustering` function three times. Visualize the data points, cluster centers and the assignment of data points to cluster centers in a single scatter plot. To do this, use a for-loop and `scatter_clusters_2d` to plot all the results in one plot (have a closer look at matplotlib subplots and axes). Set the inertia as title of each subplot (e.g. `f"Inertia: {inertia:.3f}"`). Always plot the *original* (unscaled) data, so that the results with and without standardization can be compared in the same coordinate system.
 7. Return the figure object.
 
 8. Now have a look at the `main` function. The default number $k$ of clusters is not optimal. Experiment with different values and set the number of k-means clusters you want to use.
-
-Note: Data preprocessing benefits greatly from expert knowledge of the field/application in which the data was measured. Some preprocessing methods may not be applicable in certain settings.
 
 
 #### Decision Boundaries
@@ -51,14 +49,15 @@ Recall that k-means assigns a given point $x$ to a center $c_i$ if there is no c
 
 Each cell in this diagram is the set of points which are closest to a center:
 
-$$R_j = \{x \in X \mid d(x, c_j) \leq d(x, c_i) \text{ for all } j \neq i\}.$$
+$$R_j = \{x \in X \mid d(x, c_j) \leq d(x, c_i) \text{ for all } i \neq j\}.$$
 
 A Voronoi diagram can be used as a tool to visualize the boundaries of the k-means cluster, but is also useful as a tool to understand the algorithm.
 
-9. Navigate to the `plot_decision_boundaries` function and load, preprocess and cluster the synthetic data using the function`perform_kmeans_clustering` again.
-10. Use `Voronoi` and `voronoi_plot_2d` from the `scipy.spatial` package to visualize the boundaries of the k-means clusters. Again use the `ax` object of the plot and `scatter_clusters_2d`.
+9. Navigate to the `plot_decision_boundary` function and load, standardize and cluster the synthetic data using the function `perform_kmeans_clustering` again.
+10. Use `Voronoi` and `voronoi_plot_2d` from the `scipy.spatial` package to visualize the boundaries of the k-means clusters. Again use the `ax` object of the plot and `scatter_clusters_2d`. Note that `voronoi_plot_2d` rescales the axes to the Voronoi vertices, so reset the axis limits to the range of the data afterwards.
 11. Test your code with the test framework of vscode or by typing `nox -r -s test` in your terminal.
 12. (Optional) Which assumptions/limitations of the k-Means algorithm are illustrated by this visualization?
+
 
 ### Task 2: Data compression - Color Quantization
 
@@ -66,7 +65,7 @@ A common application of clustering is data compression, where large amounts of d
 
 In this task the goal is to reduce the storage requirement of an image with width $w$ and height $h$ from the dimension $3\cdot w\cdot h$ to $w\cdot h + 3\cdot k$ via clustering: 
 
-1. Open the file `src/ex2_image_compression.py`. The image is loaded in the `main` function using the `load_image` function. Inspect the `input_img` variable and print the information about its dimensions.
+1. Open the file `src/ex2_image_compression.py`. The image is loaded in the `main` function using the `load_image` function (pixel values are scaled to $[0, 1]$). Inspect the `input_img` variable and print the information about its dimensions.
 
 Implement the `compress_colorspace` function using the k-means algorithm: 
 
@@ -74,18 +73,19 @@ Implement the `compress_colorspace` function using the k-means algorithm:
 
 3. Use `MiniBatchKMeans` to cluster the image into $k$ clusters.
 
-4. Return a compressed image where the number of unique colors where reduced from $256^3$ to $k$ via k-means clustering. The compressed image must have the same shape as the original one.
+4. Return a compressed image where the number of unique colors was reduced from (up to) $256^3$ to at most $k$ via k-means clustering, i.e. replace each pixel by the center of its cluster. The compressed image must have the same shape as the original one.
 
 5. Use `compress_colorspace` in your `main` function to compress the image for $k \in \{2,8,64,256\}$ and plot the result using imshow. Set the corresponding value of $k$ as title for each result. 
 
 6. Test your code with the test framework of vscode or by typing `nox -r -s test` in your terminal.
+
 
 ### Task 3 (Optional): k-Means++
 
 As mentioned above, Lloyd's algorithm requires an initial set of centers. Looking more closely at the sklearn documentation, the second argument allows us to use either uniformly randomly selected points or something called "kmeans++" or user-defined array as the initial set of centers. The main contribution of k-means++ is a clever strategy for choosing the initial centers:
 ***
 1. Choose a point $x_1 \in P$ uniformly at random, set $C^1 = \{ x_1 \}$.
-2. **for** $i = 0$ to $k$ **do**:
+2. **for** $i = 2$ to $k$ **do**:
 3. $\qquad$ Draw a point $x_i \in P$ according to the probability distribution
 
 $$\frac{\min_{c \in C^{i-1}} \lVert x-c \rVert_2^2}{\sum_{y \in P} \min_{c \in C^{i-1}} \lVert y - c \rVert_2^2}$$
@@ -98,10 +98,18 @@ Navigate into `src/ex3_kmeans_plus_plus.py` and have a look at the code.
 
 1. Implement the `uniform_sampling` function by drawing points uniformly from the datasets.
 2. Implement the `d2_sampling` function using the $D^2$ sampling algorithm described above.
-3. Compare the results on the two datasets by executing the scirpt with `python ./src/ex3_kmeans_plus_plus.py`. Which advantages does $D^2$ sampling provide as an initialization?
+3. Compare the results on the two datasets by executing the script with `python ./src/ex3_kmeans_plus_plus.py`. Which advantages does $D^2$ sampling provide as an initialization?
    **Hint**: (Weighted) sampling with and without replacement can be performed using `np.random.choice`.
 4. Test your code with the test framework of vscode or by typing `nox -r -s test` in your terminal.
 
+
 ### Task 4 (Optional): Comparison between k-Means and Gaussian Mixture Models
 
-Navigate into `src/ex4_gmm.py` and have a look at the code. We are creating synthetic dataset with three classes (the same that we used in the lecture) an want to compare k-means clustering and GMMs. Implement the TODOs in the file.
+Navigate into `src/ex4_gmm.py` and have a look at the code. The function `create_dataset` creates a synthetic dataset with three classes (the same that we used in the lecture). We want to compare k-means clustering and Gaussian Mixture Models (GMMs) on this data.
+
+1. Implement `perform_kmeans`: create a `sklearn.cluster.KMeans` model with `n_init=10` and the given `random_state`, fit it to the data and return the cluster labels and the cluster centers.
+2. Implement `perform_gmm`: create a `sklearn.mixture.GaussianMixture` model with the given `random_state`, fit it to the data and return the predicted cluster assignments and the means of the components.
+3. Implement `plot_clustering`: scatter the data colored by the cluster labels and mark the cluster centers with red crosses. Label the axes, add a legend and set the given title.
+4. Run the script and compare the results with the ground truth classes. Which method recovers the classes better and why?
+5. Test your code with the test framework of vscode or by typing `nox -r -s test` in your terminal.
+
